@@ -16,13 +16,23 @@ A few examples of use are:
 * [Video autoplay](https://github.com/ampproject/amphtml/blob/f7bb404d853df97645bb1a38fffc28b7efac16b8/src/utils/video.js#L26)
 * [Audio play](https://github.com/ampproject/amphtml/blob/e32fdddfa38e043cd1df102d50e6d12911e1227e/extensions/amp-iframe/0.1/amp-iframe.js#L675)
 
-`hasSeenUserActivation` indicates whether a window has ever seen a user activation in its lifecycle. Some APIs such
+`hasBeenActive` indicates whether a window has ever seen a user activation in its lifecycle. Some APIs such
 as autoplay are controlled by this sticky boolean. This boolean does not contain whether the current [task](https://html.spec.whatwg.org/multipage/webappapis.html#concept-task) is triggered by a [user activation](https://html.spec.whatwg.org/multipage/interaction.html#activation) but that **one** has been seen.
+`isActive` indicates whether a window currently has user activation in its lifecycle.
+
+If in the future we wish to expose an event when Activation is changed we are able to change Activation to be an
+EventTarget.
 
 ## Proposed Window IDL
 
 ```WebIDL
+interface Activation
+{
+    readonly boolean hasBeenActive = false;
+    readonly boolean isActive = false;
+};
+
 partial interface Window {
-    boolean hasSeenUserActivation = false;
+    [Replaceable, SameObject] readonly Activation activation;
 };
 ```
