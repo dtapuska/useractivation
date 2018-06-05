@@ -29,8 +29,8 @@ EventTarget.
 ```WebIDL
 interface UserActivation
 {
-    readonly boolean hasBeenActive = false;
-    readonly boolean isActive = false;
+    readonly attribute boolean hasBeenActive;
+    readonly attribute boolean isActive;
 };
 
 partial interface Window {
