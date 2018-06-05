@@ -27,6 +27,7 @@ EventTarget.
 ## Proposed Window IDL
 
 ```WebIDL
+[NoInterfaceObject]
 interface UserActivation
 {
     readonly attribute boolean hasBeenActive;
