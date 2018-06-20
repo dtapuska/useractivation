@@ -46,7 +46,7 @@ if (supportsWindowPostMessageOptions) {
 If in the future we wish to expose an event when `UserActivation` is changed we are able to change UserActivation to be an
 EventTarget.
 
-## Proposed Window IDL
+## Proposed IDL
 
 ```WebIDL
 interface UserActivation
