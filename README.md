@@ -35,9 +35,9 @@ try {
 }
 
 if (supportsWindowPostMessageOptions) {
-  window.postMessage('exampleMessage', [], {includeUserActivation: true});
+  window.postMessage("exampleMessage", [], {includeUserActivation: true});
 } else {
-  window.postMessage('exampleMessage, '/');
+  window.postMessage("exampleMessage", "/");
 }
 
 }
