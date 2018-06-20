@@ -44,7 +44,7 @@ parital interface MessageEvent {
 };
 
 parital interface MessageEventInit {
-    UserActivation? userActivationOnPost = null;
+    UserActivation? userActivation = null;
 };
 
 dictionary PostMessageOptions {
@@ -53,7 +53,7 @@ dictionary PostMessageOptions {
 };
 
 partial interface Window {
- [CrossOrigin] void postMessage(any message, optional sequence<object> transfer = [],
+ void postMessage(any message, optional sequence<object> transfer = [],
                                 optional PostMessageOptions options);
 
 };
