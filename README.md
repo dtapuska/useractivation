@@ -21,7 +21,29 @@ We propose to expose the user activation states as a `UserActivation` object in 
 as autoplay are controlled by this sticky boolean. This boolean does not reflect whether the current [task](https://html.spec.whatwg.org/multipage/webappapis.html#concept-task) is triggered by a [user activation](https://html.spec.whatwg.org/multipage/interaction.html#activation) but that the current task has been seen **one**.
 * The field `isActive` indicates whether the associated `window` currently has user activation in its lifecycle.
 
-We propose to expose the user activation state as a `UserActivation` object in `MessageEvent` to provide the UserActivation state from the window posting the message. This attribute will only be set if the `PostMessageOptions` options argument on the `postMessage` has `proivdeUserActivationState` with value `true`.
+We propose to expose the user activation state as a `UserActivation` object in `MessageEvent` to provide the UserActivation state from the window posting the message. This attribute will only be set if the `WindowPostMessageOptions` options argument on the `postMessage` has `includeUserActivation` with value `true`.
+
+The newly exposed `postMessage` is a new override. The desire to add a new override is to make `postMessage` look similiar across all targets. Currently there are 7 `postMessage` [interface](https://gist.github.com/domenic/d0ea64893c255445574fd535ca89731f) definitions. In making this consistent it will be of the form `postMessage(message, transfer, options)`. To feature detect if the new options are supported an author can test if the postMessage throws an exception when attempting to send a message that will go nowhere.
+
+```javascript
+
+var supportsWindowPostMessageOptions = false;
+try {
+  window.postMessage(null, [], {targetOrigin: "ftp://example.com"});
+  supportsWindowPostMessageOptions = true;
+} catch(e) {
+}
+
+if (supportsWindowPostMessageOptions) {
+  window.postMessage('exampleMessage', [], {includeUserActivation: true});
+} else {
+  window.postMessage('exampleMessage, '/');
+}
+
+}
+
+```
+
 
 If in the future we wish to expose an event when `UserActivation` is changed we are able to change UserActivation to be an
 EventTarget.
@@ -39,22 +61,22 @@ partial interface Navigator {
     readonly attribute UserActivation userActivation;
 };
 
-parital interface MessageEvent {
+partial interface MessageEvent {
     readonly attribute UserActivation? userActivation;
 };
 
-parital interface MessageEventInit {
+parital dictionary MessageEventInit {
     UserActivation? userActivation = null;
 };
 
-dictionary PostMessageOptions {
+dictionary WindowPostMessageOptions {
   USVString targetOrigin = "/";
-  bool provideUserActivationState = false;
+  bool includeUserActivation = false;
 };
 
 partial interface Window {
  void postMessage(any message, optional sequence<object> transfer = [],
-                                optional PostMessageOptions options);
+                                optional WindowPostMessageOptions options);
 
 };
 
