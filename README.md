@@ -40,8 +40,6 @@ if (supportsWindowPostMessageOptions) {
   window.postMessage("exampleMessage", "/");
 }
 
-}
-
 ```
 
 
@@ -65,7 +63,7 @@ partial interface MessageEvent {
     readonly attribute UserActivation? userActivation;
 };
 
-parital dictionary MessageEventInit {
+partial dictionary MessageEventInit {
     UserActivation? userActivation = null;
 };
 
