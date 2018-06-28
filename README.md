@@ -69,7 +69,7 @@ partial dictionary MessageEventInit {
 
 dictionary WindowPostMessageOptions {
   USVString targetOrigin = "/";
-  bool includeUserActivation = false;
+  boolean includeUserActivation = false;
 };
 
 partial interface Window {
