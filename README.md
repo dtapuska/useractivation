@@ -49,11 +49,11 @@ partial interface Navigator {
 };
 
 partial interface MessageEvent {
-    readonly attribute UserActivation? userActivation;
+    [Exposed=Window] readonly attribute UserActivation? userActivation;
 };
 
 partial dictionary MessageEventInit {
-    UserActivation? userActivation = null;
+    [Exposed=Window] UserActivation? userActivation = null;
 };
 
 dictionary WindowPostMessageOptions {
