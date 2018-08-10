@@ -23,7 +23,7 @@ as autoplay are controlled by this sticky boolean. This boolean does not reflect
 
 We propose to expose the user activation state as a `UserActivation` object in `MessageEvent` to provide the UserActivation state from the window posting the message. This attribute will only be set if the `WindowPostMessageOptions` options argument on the `postMessage` has `includeUserActivation` with value `true`.
 
-The newly exposed `postMessage` is a new override. The desire to add a new override is to make `postMessage` look similiar across all targets. Currently there are 7 `postMessage` [interface](https://gist.github.com/domenic/d0ea64893c255445574fd535ca89731f) definitions. In making this consistent it will be of the form `postMessage(message, transfer, options)`. To feature detect if the new options are supported an author can test if the postMessage method supports a single argument.
+The newly exposed `postMessage` is a new override. The desire to add a new override is to make `postMessage` look similiar across all targets. Currently there are 7 `postMessage` [interface](https://gist.github.com/domenic/d0ea64893c255445574fd535ca89731f) definitions. In making this consistent it will be of the form `postMessage(message, options)`. To feature detect if the new options are supported an author can test if the postMessage method supports a single argument.
 
 ```javascript
 
@@ -56,14 +56,17 @@ partial dictionary MessageEventInit {
     [Exposed=Window] UserActivation? userActivation = null;
 };
 
-dictionary WindowPostMessageOptions {
+dictionary WindowPostMessageOptions : PostMessageOptions {
   USVString targetOrigin = "/";
   boolean includeUserActivation = false;
 };
 
+dictionary PostMessageOptions {
+  sequence<object> transfer = [];
+};
+
 partial interface Window {
- void postMessage(any message, optional sequence<object> transfer = [],
-                                optional WindowPostMessageOptions options);
+ void postMessage(any message, optional WindowPostMessageOptions options);
 
 };
 
