@@ -31,6 +31,21 @@ var supportsWindowPostMessageOptions = window.postMessage.length < 2;
 
 ```
 
+Alternatively if using inside a worker the new support can be detected via:
+
+```javascript
+
+let supported = false
+try {
+  postMessage("", { get transfer() { throw 1; } })
+} catch(e) {
+  if(e === 1) {
+    supported = true
+  }
+}
+console.log(supported)
+
+```
 
 If in the future we wish to expose an event when `UserActivation` is changed we are able to change UserActivation to be an
 EventTarget.
