@@ -1,6 +1,12 @@
 # JS API for querying User Activation
 An explainer to define ability to query the state of [user activation](https://html.spec.whatwg.org/multipage/interaction.html#activation).
 
+## Motivation
+
+Exposing the primitives that the user agent has are necessary to implement specific behaviors. For example if an iframe asks a parent window to
+resize itself, the parent way wish to check that a current user activation is active. This approach very much mirrors the state of information
+available to the user agent when checking state for requesting fullscreen.
+
 ## Abstract
 
 Currently there are ways to determine if a user gesture is active:
@@ -21,7 +27,7 @@ We propose to expose the user activation states as a `UserActivation` object in 
 as autoplay are controlled by this sticky boolean. This boolean does not reflect whether the current [task](https://html.spec.whatwg.org/multipage/webappapis.html#concept-task) is triggered by a [user activation](https://html.spec.whatwg.org/multipage/interaction.html#activation) but that the current task has been seen **one**.
 * The field `isActive` indicates whether the associated `window` currently has user activation in its lifecycle.
 
-We propose to expose the user activation state as a `UserActivation` object in `MessageEvent` to provide the UserActivation state from the posting the message. This attribute will only be set if the `PostMessageOptions` options argument on the `postMessage` has `includeUserActivation` with value `true`.
+We propose to expose the user activation state as a `UserActivation` object in `MessageEvent` to provide the UserActivation state at the time of posting the message. This attribute will only be set if the `PostMessageOptions` options argument on the `postMessage` has `includeUserActivation` with value `true`.
 
 The newly exposed `postMessage` is a new override. The desire to add a new override is to make `postMessage` look similiar across all targets. Currently there are 7 `postMessage` [interface](https://gist.github.com/domenic/d0ea64893c255445574fd535ca89731f) definitions. In making this consistent it will be of the form `postMessage(message, options)`. To feature detect if the new options are supported an author can test if the postMessage method supports a single argument.
 
@@ -49,6 +55,20 @@ console.log(supported)
 
 If in the future we wish to expose an event when `UserActivation` is changed we are able to change UserActivation to be an
 EventTarget.
+
+## Security Considerations
+
+We explicitly chose an opt-in API (the default for `includeUserActivation` is `false`) so that a message channel doesn't accidentally
+leak interaction behavior to another receiver unknowingly. For example communication between an iframe and a parent document is not
+necessarily mutual. A iframe may wish to provide its user interaction state to the parent but the parent may not wish to indicate this
+to an iframe.
+
+## Alternates Explored
+
+We explored an alternative of exposing a UserActivation attribute to be cross origin on a Window object. However this approach had
+two drawbacks:
+* The interaction state at the time of the message is posted isn't captured.
+* Chosing to expose the attribute conditionally is hard.
 
 ## Proposed IDL
 
