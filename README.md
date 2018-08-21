@@ -60,7 +60,7 @@ EventTarget.
 
 We explicitly chose an opt-in API (the default for `includeUserActivation` is `false`) so that a message channel doesn't accidentally
 leak interaction behavior to another receiver unknowingly. For example communication between an iframe and a parent document is not
-necessarily mutual. A iframe may wish to provide its user interaction state to the parent but the parent may not wish to indicate this
+necessarily mutual. An iframe may wish to provide its user interaction state to the parent but the parent may not wish to indicate this
 to an iframe.
 
 ## Alternates Explored
@@ -68,7 +68,7 @@ to an iframe.
 We explored an alternative of exposing a UserActivation attribute to be cross origin on a Window object. However this approach had
 two drawbacks:
 * The interaction state at the time of the message is posted isn't captured.
-* Chosing to expose the attribute conditionally is hard.
+* Chosing to expose the attribute conditionally to specific origins is complex.
 
 ## Proposed IDL
 
