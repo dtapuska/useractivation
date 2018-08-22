@@ -73,7 +73,9 @@ two drawbacks:
 ## Proposed IDL
 
 ```WebIDL
-interface UserActivation
+[
+  Exposed=(Window,Worker,AudioWorklet)
+] interface UserActivation
 {
     readonly attribute boolean hasBeenActive;
     readonly attribute boolean isActive;
