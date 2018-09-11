@@ -32,7 +32,7 @@ User Activation Check:
   function isUserGesture(event) {
     if (activation.value == 'api') {
       if (event.userActivation.isActive) {
-          return Promose.resolve();
+          return Promise.resolve();
       }
     } else if (activation.value == 'audio') {
 
@@ -57,7 +57,7 @@ User Activation Check:
         }
       });
     }
-    return Promose.reject();
+    return Promise.reject();
   }
 
   function resetSize() {
