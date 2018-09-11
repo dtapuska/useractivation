@@ -1,0 +1,80 @@
+
+This example demostrates a use case and three posible solutions.
+<ul>
+  <li>User Gesture Audio - uses an audio tag to detect presense of a user
+    gesture. It fails in the timer case.
+  <li>User Gesture Clipboard - works, but is descructive (destroys what
+    the user has on their system clipboard and requires permissions.
+  <li>User Activation API - Only enabled for browsers that support the
+    proposed API. But is non-destructive and is generally awesome.
+</ul>
+
+User Activation Check:
+<select id="user-activation">
+  <option value="audio">User Gesture Audio</option>
+  <option value="clipboard">User Gesture Clipboard</option>
+  <option value="api">User Activation API</option>
+</select>
+<br>
+<button onClick="reset();">Reset</button>
+<br>
+
+<iframe src="child.html" style="width: 300px; height: 400px"></iframe>
+<script>
+  var activation = document.getElementById('user-activation');
+  var child = document.getElementsByTagName("iframe")[0];
+
+  activation.options[2].disabled = navigator.userActivation === undefined;
+
+  // Determine if a user gesture is active.
+  function isUserGesture(event) {
+    if (activation.value == 'api') {
+      if (event.userActivation.isActive) {
+          return Promose.resolve();
+      }
+    } else if (activation.value == 'audio') {
+
+      // Create an audio tag, try to play it and check state.
+      const audio = document.createElement('audio');
+      audio.play();
+      if (!audio.paused)
+        return Promise.resolve();
+    } else if (activation.value == 'clipboard') {
+      // Copy data to clipboard to check it made it there.
+      const el = document.createElement('textarea');
+      el.value = 'example text ' + Math.random();
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      return navigator.clipboard.readText().then(clipText => {
+        if (clipText == el.value) {
+          console.log('got clip text');
+        } else {
+          throw 'no clip text';
+        }
+      });
+    }
+    return Promose.reject();
+  }
+
+  function resetSize() {
+    child.contentWindow.postMessage('Size restored', '/');
+    child.style = "width: 300px; height: 400px";
+  }
+  function reset() {
+    child.contentWindow.postMessage('reset', '/');
+  }
+
+  window.addEventListener("message", e => {
+    isUserGesture(e).then(() => {
+      console.log('resolved');
+      child.contentWindow.postMessage('Resize granted', '/');
+      child.style = "width: 300px; height: 800px";
+      setTimeout(resetSize, 2000);
+    }).catch((e) => {
+      console.log('rejected ' + e);
+      child.contentWindow.postMessage('Resize denied', '/');
+    });
+ });
+</script>

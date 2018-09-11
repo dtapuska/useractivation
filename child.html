@@ -1,0 +1,34 @@
+<html style="background: grey">
+<pre id="description"></pre>
+<script>
+  var description = document.getElementById("description");
+  function resize() {
+    // Check that WindowPostOptions is supported
+    if (window.parent.postMessage.length == 1) {
+      window.parent.postMessage('resize', {includeUserActivation: true});
+    } else {
+      window.parent.postMessage('resize', '/');
+    }
+  }
+
+  function reset() {
+    description.innerHTML = "Click to expand";
+    document.addEventListener('click', () => {
+        description.innerHTML += "\nRequested expand";
+        resize();
+        setTimeout(() => {
+            description.innerHTML += "\nRequesting expand from a timer";
+            resize();
+        }, 4000);
+    }, {once: true});
+  }
+  reset();
+
+  window.addEventListener('message', e => {
+    if (e.data == "reset") {
+      reset();
+      return;
+    }
+    description.innerHTML += "\n" + e.data;
+  });
+</script>
