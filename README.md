@@ -7,6 +7,9 @@ Exposing the primitives that the user agent has are necessary to implement speci
 resize itself, the parent way wish to check that a current user activation is active. This approach very much mirrors the state of information
 available to the user agent when checking state for requesting fullscreen.
 
+Exposing the primitives of the current state prevent web authors from taking steps that are inefficient (creating audio and video to check
+state) or doing descructive and security escalated actions (clipboard APIs) to determine what the user activation state is.
+
 ## Abstract
 
 Currently there are ways to determine if a user gesture is active:
@@ -56,12 +59,41 @@ console.log(supported)
 If in the future we wish to expose an event when `UserActivation` is changed we are able to change UserActivation to be an
 EventTarget.
 
+
+## Example
+
+An example of the iframe use case is [available].(https://cdn.rawgit.com/dtapuska/useractivation/HEAD/example.html) It demonstrates the
+current state of affairs and the promosed use of the API.
+
+Specifically interesting code in the example is the child is opting in to send the user activation information if it can.
+
+```javascript
+
+  // Check that WindowPostOptions is supported
+  if (window.parent.postMessage.length == 1) {
+    window.parent.postMessage('resize', {includeUserActivation: true});
+  } else {
+    window.parent.postMessage('resize', '/');
+  }
+
+```
+
+The reading of the userActivation argument on the MessageEvent in the parent iframe.
+
+```javascript
+    if (event.userActivation.isActive) {
+        return Promose.resolve();
+    }
+```
+
+
 ## Security Considerations
 
 We explicitly chose an opt-in API (the default for `includeUserActivation` is `false`) so that a message channel doesn't accidentally
-leak interaction behavior to another receiver unknowingly. For example communication between an iframe and a parent document is not
-necessarily mutual. An iframe may wish to provide its user interaction state to the parent but the parent may not wish to indicate this
-to an iframe.
+leak interaction behavior to another receiver unknowingly. The sender of the message must opt in for each message sent, indicating on the
+`PostMesageOptions` that it permits the current user activation state to be cloned and provided to the receiver of the message.
+For example communication between an iframe and a parent document is not necessarily mutual. An iframe may wish to provide its
+user interaction state to the parent but the parent may not wish to indicate this to an iframe.
 
 ## Alternates Explored
 
