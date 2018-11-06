@@ -3,12 +3,21 @@ An explainer to define ability to query the state of [user activation](https://h
 
 ## Motivation
 
-Exposing the primitives that the user agent has are necessary to implement specific behaviors. For example if an iframe asks a parent window to
-resize itself, the parent way wish to check that a current user activation is active. This approach very much mirrors the state of information
-available to the user agent when checking state for requesting fullscreen.
+Suppose a page that contains a cross-origin iframe wants to allow that iframe to request
+(say, via a `postMessage` contract) becoming larger, because it's appropriate for that
+iframe to become larger when the user interacts with it. However, it doesn't entirely
+trust that iframe from trying to grab extra attention, so it wants to do the same check
+that the browser does as part of its popup blocking code, which is a test for user
+activation. So this API allows the containing page to validate the `postMessage`
+from its iframe by only honoring the request to become larger if there is currently
+a user activation, that is, if the message appears to have been the result of a real
+user interaction with that iframe.
 
-Exposing the primitives of the current state prevent web authors from taking steps that are inefficient (creating audio and video to check
-state) or doing descructive and security escalated actions (clipboard APIs) to determine what the user activation state is.
+Exposing the primitives that the user agent has are necessary to implement these
+specific behaviors correctly. It currently is possible without an API to detect
+that a user activation has occurred and one is active. However these approaches
+may be inefficient (creating audio and video to check state) or have descructive
+properties and require escalated security permissions (clipboard APIs).
 
 ## Abstract
 
