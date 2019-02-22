@@ -71,7 +71,7 @@ EventTarget.
 
 ## Example
 
-An example of the iframe use case is [available](https://cdn.rawgit.com/dtapuska/useractivation/HEAD/example.html). It demonstrates the
+An example of the iframe use case is [available](https://dtapuska.github.io/useractivation/example.html). It demonstrates the
 current state of affairs and the promosed use of the API.
 
 Specifically interesting code in the example is the child is opting in to send the user activation information if it can.
