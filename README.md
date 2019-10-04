@@ -16,7 +16,7 @@ user interaction with that iframe.
 Exposing the primitives that the user agent has are necessary to implement these
 specific behaviors correctly. It currently is possible without an API to detect
 that a user activation has occurred and one is active. However these approaches
-may be inefficient (creating audio and video to check state) or have descructive
+may be inefficient (creating audio and video to check state) or have destructive
 properties and require escalated security permissions (clipboard APIs).
 
 ## Abstract
