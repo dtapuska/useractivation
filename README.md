@@ -138,9 +138,11 @@ dictionary WindowPostMessageOptions : PostMessageOptions {
   USVString targetOrigin = "/";
 };
 
-dictionary PostMessageOptions {
-  sequence<object> transfer = [];
-  boolean includeUserActivation = false;
+// Note that this reintroduces a dictionary named `PostMessageOptions`, which
+// was renamed to `StructuredSerializeOptions` in
+// https://github.com/whatwg/html/pull/3414
+dictionary PostMessageOptions : StructuredSerializeOptions {
+    boolean includeUserActivation = false;
 };
 
 partial interface Window {
@@ -154,5 +156,8 @@ partial interface Worker {
 partial interface MessagePort {
  void postMessage(any message, PostMessageOptions options);
 };
+
+// Note that structuredClone in the WindowOrWorkerGlobalScope interface still
+// takes StructuredSerializeOptions, not PostMessageOptions
 
 ```
